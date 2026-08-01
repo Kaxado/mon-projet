@@ -71,6 +71,10 @@
   .menu-controls span { color: #0f0; }
 
   /* --- Jeu --- */
+  .game-wrapper {
+    display: inline-block;
+    position: relative;
+  }
   .game-container {
     display: flex;
     gap: 20px;
@@ -184,6 +188,7 @@
 </div>
 
 <!-- Jeu -->
+<div class="game-wrapper" id="gameWrapper">
 <div class="game-container">
   <div class="play-area">
     <canvas id="board"></canvas>
@@ -225,8 +230,9 @@
       <span>P</span> Pause / Reprendre<br>
       <span>R</span> Recommencer
     </div>
-  </div>
-</div>
+  </div> <!-- end side-panel -->
+</div> <!-- end game-container -->
+</div> <!-- end game-wrapper -->
 
 <script>
 (function() {
@@ -640,7 +646,22 @@
     initState();
     resetDropTimer();
     drawAll();
+    fitGame();
   }
+
+  function fitGame() {
+    const wrapper = document.getElementById('gameWrapper');
+    const pad = 20;
+    const availW = window.innerWidth - pad * 2;
+    const availH = window.innerHeight - pad * 2;
+    const natW = wrapper.offsetWidth;
+    const natH = wrapper.offsetHeight;
+    if (natW === 0 || natH === 0) return;
+    const scale = Math.min(availW / natW, availH / natH, 1);
+    wrapper.style.transform = 'scale(' + scale + ')';
+  }
+
+  window.addEventListener('resize', fitGame);
 
   document.getElementById('playBtn').addEventListener('click', startGame);
   document.addEventListener('keydown', function menuStart(e) {
@@ -652,6 +673,7 @@
     }
   });
 
+  fitGame();
 })();
 </script>
 </body>
